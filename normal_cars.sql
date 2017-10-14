@@ -1,20 +1,20 @@
 \c nniosco;
 -- Create a new postgres user named normal_user.
+DROP DATABASE IF EXISTS normal_cars;
+DROP USER IF EXISTS normal_user;
 CREATE USER normal_user;
 -- Create a new database named normal_cars owned by normal_user.
-CREATE DATABASE normal_cars OWNER normal_user;
+CREATE DATABASE normal_cars WITH OWNER normal_user;
 -- Whiteboard your solution to normalizing the denormal_cars schema.
 \c normal_cars;
-\i denormal_cars.sql;
+\i scripts/denormal_data.sql;
 -- [bonus] Generate a diagram (somehow) in .png (or other) format, that of your normalized cars schema. (save and commit to this repo).
 
 -- In normal_cars.sql Create a query to generate the tables needed to accomplish your normalized schema, including any primary and foreign key constraints. Logical renaming of columns is allowed.
 CREATE TABLE IF NOT EXISTS makes (
-  id          serial,
+  id          serial       PRIMARY KEY,
   make_code   varchar(255) NOT NULL,
-  make_title  varchar(255) NOT NULL,
-
-  PRIMARY KEY (id)
+  make_title  varchar(255) NOT NULL
 );
 
 INSERT INTO makes (make_code, make_title)
@@ -39,18 +39,16 @@ SELECT DISTINCT year
 -- DROP TABLE IF EXISTS models;
 
 CREATE TABLE IF NOT EXISTS models (
-  id           serial,
+  id           serial         primary key,
   model_code   varchar(255)   NOT NULL,
   model_title  varchar(255)   NOT NULL,
   make_ID      int            references makes(id),
-  year_ID      int            references years(year),
-
-  PRIMARY KEY(id)
+  year_ID      int            references years(year)
 );
 
--- INSERT INTO models (model_code, model_title)
--- SELECT DISTINCT model_code, model_title
---   FROM car_models;
+INSERT INTO models (model_code, model_title)
+SELECT DISTINCT model_code, model_title
+  FROM car_models;
 
 -- INSERT INTO models (make_ID, year_ID)
 
@@ -60,7 +58,8 @@ CREATE TABLE IF NOT EXISTS models (
 -- Using the resources that you now possess, In normal_cars.sql Create queries to insert all of the data that was in the denormal_cars.car_models table, into the new normalized tables of the normal_cars database.
 
 -- In normal_cars.sql Create a query to get a list of all make_title values in the car_models table. Without any duplicate rows, this should have 71 results.
-
+-- SELECT make_title
+--   FROM models; 
 -- In normal_cars.sql Create a query to list all model_title values where the make_code is 'VOLKS' Without any duplicate rows, this should have 27 results.
 
 
