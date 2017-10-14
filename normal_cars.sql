@@ -1,12 +1,61 @@
+\c nniosco;
 -- Create a new postgres user named normal_user.
 CREATE USER normal_user;
 -- Create a new database named normal_cars owned by normal_user.
 CREATE DATABASE normal_cars OWNER normal_user;
 -- Whiteboard your solution to normalizing the denormal_cars schema.
-
+\c normal_cars;
+\i denormal_cars.sql;
 -- [bonus] Generate a diagram (somehow) in .png (or other) format, that of your normalized cars schema. (save and commit to this repo).
 
 -- In normal_cars.sql Create a query to generate the tables needed to accomplish your normalized schema, including any primary and foreign key constraints. Logical renaming of columns is allowed.
+CREATE TABLE IF NOT EXISTS makes (
+  id          serial,
+  make_code   varchar(255) NOT NULL,
+  make_title  varchar(255) NOT NULL,
+
+  PRIMARY KEY (id)
+);
+
+INSERT INTO makes (make_code, make_title)
+SELECT DISTINCT make_code, make_title
+  FROM car_models;
+
+-- SELECT *
+--   FROM makes;
+-- DROP TABLE IF EXISTS years;
+
+CREATE TABLE IF NOT EXISTS years (
+    year   int   PRIMARY KEY
+);
+
+INSERT INTO years (year)
+SELECT DISTINCT year
+  FROM car_models;
+
+-- SELECT *
+--   FROM years;
+
+-- DROP TABLE IF EXISTS models;
+
+CREATE TABLE IF NOT EXISTS models (
+  id           serial,
+  model_code   varchar(255)   NOT NULL,
+  model_title  varchar(255)   NOT NULL,
+  make_ID      int            references makes(id),
+  year_ID      int            references years(year),
+
+  PRIMARY KEY(id)
+);
+
+-- INSERT INTO models (model_code, model_title)
+-- SELECT DISTINCT model_code, model_title
+--   FROM car_models;
+
+-- INSERT INTO models (make_ID, year_ID)
+
+-- SELECT * 
+--   FROM models; 
 
 -- Using the resources that you now possess, In normal_cars.sql Create queries to insert all of the data that was in the denormal_cars.car_models table, into the new normalized tables of the normal_cars database.
 
