@@ -19,7 +19,7 @@
 --   FROM car_models
 --   WHERE make_code = 'LAM';
 -- In denormal_cars.sql Create a query to list all fields from all car_models in years between 2010 and 2015. Without any duplicate rows, this should have 7884 rows.
-SELECT DISTINCT *
-  FROM car_models
-  WHERE year 
-  BETWEEN 2010 and 2015;
+-- SELECT DISTINCT *
+--   FROM car_models
+--   WHERE year 
+--   BETWEEN 2010 and 2015;
